@@ -221,6 +221,12 @@ As ADRs documentam não apenas a decisão adotada, mas também o contexto, as al
 
 ---
 
+## Antes de começar
+
+Se este é o seu primeiro contato com o projeto, recomendamos a leitura de:
+
+- `docs/fundamentals.md`
+
 # Licença
 
 Este projeto está licenciado sob a licença **MIT**.
