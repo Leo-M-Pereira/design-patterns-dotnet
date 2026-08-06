@@ -1,2 +1,6 @@
 <Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Creational/">
+    <Project Path="src/Creational/FactoryMethod/FactoryMethod.csproj" />
+  </Folder>
 </Solution>
