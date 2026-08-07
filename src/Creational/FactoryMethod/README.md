@@ -1,127 +1,160 @@
 # Factory Method
 
-> *Understanding the problem is the first step toward understanding the pattern.*
+## Context
+
+We are building a notification system that needs to send messages through different channels.
+
+Initially, the system supports two notification types:
+
+- Email
+- SMS
+
+The system receives a notification type, a recipient, and a message, and is responsible for sending the notification through the appropriate channel.
+
+At this stage, the requirements are intentionally simple. The goal is not to introduce abstractions prematurely, but to start with a straightforward implementation and observe how the design evolves as new requirements are introduced.
+
+The examples in this study will evolve from this initial implementation toward the classic **Factory Method** solution proposed by the Gang of Four (GoF), followed by considerations for modern .NET applications.
 
 ---
 
-# Introdução
+## Objective
 
-O Factory Method é um dos padrões criacionais definidos pelo Gang of Four (GoF).
+The objective of this study is to understand the **Factory Method** pattern from the problem that motivates it to its different implementations.
 
-O seu propósito é desacoplar o processo de criação de objetos do código que os consome, permitindo que novas
-implementações sejam introduzidas com menor impacto sobre os consumidores.
+The study focuses not only on how to implement the pattern, but also on understanding:
 
-Mais do que uma técnica para instanciar objetos, o Factory Method representa uma mudança na forma de projetar software:
-o foco deixa de estar na criação de implementações concretas e passa para a abstração do processo de criação.
-
----
-
-# Motivação
-
-Todo Design Pattern surge para resolver um problema recorrente.
-
-Antes de estudar a implementação do Factory Method, é importante compreender quais dificuldades motivaram sua criação.
-
-Ao longo deste diretório, veremos como uma solução inicialmente simples pode tornar-se rígida, difícil de manter e pouco
-extensível à medida que novas regras de negócio são incorporadas.
-
-O Factory Method surge como uma resposta para esse cenário.
+- When the problem actually appears;
+- Why a simpler implementation may be preferable initially;
+- How increasing requirements expose design limitations;
+- How Factory Method addresses those limitations;
+- What trade-offs are introduced by the pattern;
+- How the same design can be approached in modern .NET applications.
 
 ---
 
-# Objetivos
+## Learning Path
 
-- Compreender o problema que motivou o Pattern.
-- Identificar situações em que sua aplicação é apropriada.
-- Implementar a solução clássica proposta pelo GoF.
-- Reconhecer variações modernas utilizadas em aplicações .NET.
-- Avaliar os trade-offs envolvidos em sua utilização.
+The examples are organized as an incremental evolution of the same scenario.
 
----
+```mermaid
+flowchart LR
+    A[Context] --> B[00-Before]
+    B --> C[01-GoF]
+    C --> D[02-Modern .NET]
+```
 
-# Estrutura deste diretório
+Each stage represents a different point in the evolution of the design.
 
-| Diretório         | Objetivo                                                                                                                                                      |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **00-Before**     | Apresenta uma implementação inicial, semelhante ao que normalmente encontramos em projetos reais, evidenciando as limitações que motivam a adoção do Pattern. |
-| **01-GoF**        | Implementação clássica descrita pelo Gang of Four.                                                                                                            |
-| **02-Console**    | Aplicação do Pattern em um projeto Console.                                                                                                                   |
-| **03-DI**         | Evolução utilizando Injeção de Dependência.                                                                                                                   |
-| **04-AspNetCore** | Aplicação em um cenário ASP.NET Core.                                                                                                                         |
-| **05-RealWorld**  | Exemplo inspirado em um cenário próximo ao encontrado em projetos reais.                                                                                      |
-| **Shared**        | Objetos compartilhados entre os exemplos deste Pattern.                                                                                                       |
+The pattern is not introduced simply because it exists. It is introduced when the problem demonstrates that the additional abstraction is justified.
 
 ---
 
-# Fluxo recomendado de estudo
+## 00-Before
 
-Os exemplos foram organizados para serem estudados em sequência.
+### Context
 
-Embora seja possível acessar diretamente qualquer implementação, recomenda-se seguir a ordem proposta.
+The initial version of the notification system supports two notification channels:
 
-Cada etapa representa uma evolução da solução, permitindo compreender não apenas como o Pattern funciona, mas
-principalmente por que ele existe.
+- Email
+- SMS
 
-A sequência sugerida é:
+A `NotificationService` receives the notification type and decides which concrete notification implementation should be created and used.
 
-1. Compreender o problema.
-2. Identificar as limitações da solução inicial.
-3. Estudar a proposta do GoF.
-4. Explorar implementações modernas.
-5. Avaliar vantagens, limitações e trade-offs.
+At this point, the implementation is intentionally straightforward.
+
+There is no interface, abstract creator, factory hierarchy, or dependency injection.
+
+### Initial Implementation
+
+The application follows this flow:
+
+```mermaid
+flowchart TD
+    A[BeforeExample] --> B[NotificationService]
+    B --> C{Notification Type}
+    C -->|Email| D[EmailNotification]
+    C -->|SMS| E[SmsNotification]
+    D --> F[Send Email]
+    E --> G[Send SMS]
+```
+
+The `NotificationService` contains the decision about which concrete notification class should be instantiated.
+
+Conceptually, the implementation follows this structure:
+
+```text
+BeforeExample
+      |
+      v
+NotificationService
+      |
+      +---- EmailNotification
+      |
+      +---- SmsNotification
+```
+
+### Design Decisions
+
+The initial implementation intentionally keeps the design simple.
+
+#### No Interface Yet
+
+There are only two concrete notification types and no requirement at this stage that different implementations need to be interchangeable through an abstraction.
+
+Introducing an interface now would add indirection without solving an existing problem.
+
+#### The Service Owns the Creation Decision
+
+`NotificationService` currently knows which concrete class should be created for each notification type.
+
+For the initial requirements, this is a straightforward and understandable solution.
+
+#### Concrete Implementations
+
+`EmailNotification` and `SmsNotification` are concrete classes responsible for their respective delivery mechanisms.
+
+There is no inheritance hierarchy because the current requirements do not demand one.
+
+### Current Limitations
+
+Although the implementation is simple, the `NotificationService` is directly coupled to the concrete notification implementations.
+
+As the number of notification types increases, the service will need to be modified to accommodate each new type.
+
+For example, introducing additional channels such as:
+
+- WhatsApp;
+- Push Notification;
+- Slack;
+- Webhook;
+
+would require changes to the existing decision logic.
+
+At this stage, this is not necessarily a problem. The important point is to recognize the direction in which the design is evolving.
+
+The next stage will introduce new requirements and allow us to evaluate whether the current design continues to be appropriate.
 
 ---
 
-# O que este material não pretende
+## 01-GoF
 
-Este diretório não visa apresentar o Factory Method como uma solução universal.
+This stage will introduce the classic **Factory Method** solution described by the Gang of Four.
 
-Nem todo problema exige um ‘Design’ Pattern.
+The objective is to understand how the pattern separates the creation of objects from the code that uses those objects.
 
-Ao longo dos exemplos serão discutidos os custos introduzidos pelo Pattern, os cenários em que sua utilização agrega
-valor e aqueles em que uma solução mais simples continua a ser a melhor escolha.
-
----
-
-# Pré-requisitos
-
-Recomenda-se conhecimento básico sobre:
-
-- C#
-- Programação Orientada a Objetos
-- Interfaces
-- Herança
-- Polimorfismo
-
-Não é necessário conhecimento prévio sobre Design Patterns.
+The implementation will be developed from the limitations identified in the previous stage.
 
 ---
 
-# Referências
+## 02-Modern .NET
 
-## Livros
+After understanding the classic GoF implementation, this stage will explore how similar design goals can be achieved using mechanisms commonly found in modern .NET applications.
 
-- Gamma, Erich; Helm, Richard; Johnson, Ralph; Vlissides, John. *Design Patterns: Elements of Reusable Object-Oriented
-  ‘Software’.*
-
-## Documentação
-
-- Microsoft Learn
-- Documentação oficial do .Net
+The objective is not to replace the original pattern automatically, but to evaluate different approaches and understand their respective trade-offs.
 
 ---
 
-# Comece por aqui
+## References
 
-Inicie pelo diretório **00-Before**.
-
-Antes de estudar qualquer implementação, procure compreender o problema que motivou o surgimento do Factory Method.
-
-Quando o problema é compreendido, a solução deixa de parecer uma técnica e passa a ser uma consequência natural do
-processo de evolução do ‘software’.
-
----
-
-> *Understanding the problem is the first step toward understanding the pattern.*
-
-> *The goal is not to memorize the pattern, but to understand the problem that led to its creation.*
+- Gamma, Erich; Helm, Richard; Johnson, Ralph; Vlissides, John. *Design Patterns: Elements of Reusable Object-Oriented Software*.
+- Microsoft .NET documentation.
