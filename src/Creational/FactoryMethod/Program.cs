@@ -1,1 +1,5 @@
-﻿Console.WriteLine("Factory Method Pattern");
+﻿using FactoryMethod.Before;
+
+BeforeExample.Run();
+
+

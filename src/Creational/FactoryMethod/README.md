@@ -8,9 +8,11 @@
 
 O Factory Method é um dos padrões criacionais definidos pelo Gang of Four (GoF).
 
-Seu propósito é desacoplar o processo de criação de objetos do código que os consome, permitindo que novas implementações sejam introduzidas com menor impacto sobre os consumidores.
+O seu propósito é desacoplar o processo de criação de objetos do código que os consome, permitindo que novas
+implementações sejam introduzidas com menor impacto sobre os consumidores.
 
-Mais do que uma técnica para instanciar objetos, o Factory Method representa uma mudança na forma de projetar software: o foco deixa de estar na criação de implementações concretas e passa para a abstração do processo de criação.
+Mais do que uma técnica para instanciar objetos, o Factory Method representa uma mudança na forma de projetar software:
+o foco deixa de estar na criação de implementações concretas e passa para a abstração do processo de criação.
 
 ---
 
@@ -20,7 +22,8 @@ Todo Design Pattern surge para resolver um problema recorrente.
 
 Antes de estudar a implementação do Factory Method, é importante compreender quais dificuldades motivaram sua criação.
 
-Ao longo deste diretório, veremos como uma solução inicialmente simples pode tornar-se rígida, difícil de manter e pouco extensível à medida que novas regras de negócio são incorporadas.
+Ao longo deste diretório, veremos como uma solução inicialmente simples pode tornar-se rígida, difícil de manter e pouco
+extensível à medida que novas regras de negócio são incorporadas.
 
 O Factory Method surge como uma resposta para esse cenário.
 
@@ -38,15 +41,15 @@ O Factory Method surge como uma resposta para esse cenário.
 
 # Estrutura deste diretório
 
-| Diretório | Objetivo |
-|-----------|----------|
-| **00-Before** | Apresenta uma implementação inicial, semelhante ao que normalmente encontramos em projetos reais, evidenciando as limitações que motivam a adoção do Pattern. |
-| **01-GoF** | Implementação clássica descrita pelo Gang of Four. |
-| **02-Console** | Aplicação do Pattern em um projeto Console. |
-| **03-DI** | Evolução utilizando Injeção de Dependência. |
-| **04-AspNetCore** | Aplicação em um cenário ASP.NET Core. |
-| **05-RealWorld** | Exemplo inspirado em um cenário próximo ao encontrado em projetos reais. |
-| **Shared** | Objetos compartilhados entre os exemplos deste Pattern. |
+| Diretório         | Objetivo                                                                                                                                                      |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **00-Before**     | Apresenta uma implementação inicial, semelhante ao que normalmente encontramos em projetos reais, evidenciando as limitações que motivam a adoção do Pattern. |
+| **01-GoF**        | Implementação clássica descrita pelo Gang of Four.                                                                                                            |
+| **02-Console**    | Aplicação do Pattern em um projeto Console.                                                                                                                   |
+| **03-DI**         | Evolução utilizando Injeção de Dependência.                                                                                                                   |
+| **04-AspNetCore** | Aplicação em um cenário ASP.NET Core.                                                                                                                         |
+| **05-RealWorld**  | Exemplo inspirado em um cenário próximo ao encontrado em projetos reais.                                                                                      |
+| **Shared**        | Objetos compartilhados entre os exemplos deste Pattern.                                                                                                       |
 
 ---
 
@@ -56,7 +59,8 @@ Os exemplos foram organizados para serem estudados em sequência.
 
 Embora seja possível acessar diretamente qualquer implementação, recomenda-se seguir a ordem proposta.
 
-Cada etapa representa uma evolução da solução, permitindo compreender não apenas como o Pattern funciona, mas principalmente por que ele existe.
+Cada etapa representa uma evolução da solução, permitindo compreender não apenas como o Pattern funciona, mas
+principalmente por que ele existe.
 
 A sequência sugerida é:
 
@@ -70,11 +74,12 @@ A sequência sugerida é:
 
 # O que este material não pretende
 
-Este diretório não tem como objetivo apresentar o Factory Method como uma solução universal.
+Este diretório não visa apresentar o Factory Method como uma solução universal.
 
-Nem todo problema exige um Design Pattern.
+Nem todo problema exige um ‘Design’ Pattern.
 
-Ao longo dos exemplos serão discutidos os custos introduzidos pelo Pattern, os cenários em que sua utilização agrega valor e aqueles em que uma solução mais simples continua sendo a melhor escolha.
+Ao longo dos exemplos serão discutidos os custos introduzidos pelo Pattern, os cenários em que sua utilização agrega
+valor e aqueles em que uma solução mais simples continua a ser a melhor escolha.
 
 ---
 
@@ -96,12 +101,13 @@ Não é necessário conhecimento prévio sobre Design Patterns.
 
 ## Livros
 
-- Gamma, Erich; Helm, Richard; Johnson, Ralph; Vlissides, John. *Design Patterns: Elements of Reusable Object-Oriented Software.*
+- Gamma, Erich; Helm, Richard; Johnson, Ralph; Vlissides, John. *Design Patterns: Elements of Reusable Object-Oriented
+  ‘Software’.*
 
 ## Documentação
 
 - Microsoft Learn
-- Documentação oficial do .NET
+- Documentação oficial do .Net
 
 ---
 
@@ -111,7 +117,8 @@ Inicie pelo diretório **00-Before**.
 
 Antes de estudar qualquer implementação, procure compreender o problema que motivou o surgimento do Factory Method.
 
-Quando o problema é compreendido, a solução deixa de parecer uma técnica e passa a ser uma consequência natural do processo de evolução do software.
+Quando o problema é compreendido, a solução deixa de parecer uma técnica e passa a ser uma consequência natural do
+processo de evolução do ‘software’.
 
 ---
 
