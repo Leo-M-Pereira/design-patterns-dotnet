@@ -1,86 +1,87 @@
 # Factory Method
 
-## Context
+## Contexto
 
-We are building a notification system that needs to send messages through different channels.
+Estamos construindo um sistema de notificações que precisa enviar mensagens por diferentes canais.
 
-Initially, the system supports two notification types:
+Inicialmente, o sistema oferece suporte a dois tipos de notificação:
 
 - Email
 - SMS
 
-The system receives a notification type, a recipient, and a message, and is responsible for sending the notification through the appropriate channel.
+O sistema recebe o tipo de notificação, o destinatário e a mensagem, sendo responsável por enviar a notificação pelo canal apropriado.
 
-At this stage, the requirements are intentionally simple. The goal is not to introduce abstractions prematurely, but to start with a straightforward implementation and observe how the design evolves as new requirements are introduced.
+Neste estágio, os requisitos são intencionalmente simples. O objetivo não é introduzir abstrações prematuramente, mas começar com uma implementação direta e observar como o design evolui à medida que novos requisitos são introduzidos.
 
-The examples in this study will evolve from this initial implementation toward the classic **Factory Method** solution proposed by the Gang of Four (GoF), followed by considerations for modern .NET applications.
-
----
-
-## Objective
-
-The objective of this study is to understand the **Factory Method** pattern from the problem that motivates it to its different implementations.
-
-The study focuses not only on how to implement the pattern, but also on understanding:
-
-- When the problem actually appears;
-- Why a simpler implementation may be preferable initially;
-- How increasing requirements expose design limitations;
-- How Factory Method addresses those limitations;
-- What trade-offs are introduced by the pattern;
-- How the same design can be approached in modern .NET applications.
+Os exemplos deste estudo evoluirão a partir dessa implementação inicial em direção à solução clássica do **Factory Method**, proposta pela Gang of Four (GoF), seguida por considerações sobre aplicações .NET modernas.
 
 ---
 
-## Learning Path
+## Objetivo
 
-The examples are organized as an incremental evolution of the same scenario.
+O objetivo deste estudo é compreender o padrão **Factory Method**, desde o problema que o motiva até suas diferentes implementações.
+
+O estudo não se concentra apenas em como implementar o padrão, mas também em compreender:
+
+- Quando o problema realmente surge;
+- Por que uma implementação mais simples pode ser preferível inicialmente;
+- Como o aumento dos requisitos expõe limitações no design;
+- Como o Factory Method aborda essas limitações;
+- Quais trade-offs são introduzidos pelo padrão;
+- Como o mesmo design pode ser abordado em aplicações .NET modernas.
+
+---
+
+## Caminho de Aprendizado
+
+Os exemplos são organizados como uma evolução incremental do mesmo cenário.
 
 ```mermaid
 flowchart LR
-    A[Context] --> B[00-Before]
+    A[Contexto] --> B[00-Before]
     B --> C[01-GoF]
     C --> D[02-Modern .NET]
+    D --> E[...]
 ```
 
-Each stage represents a different point in the evolution of the design.
+Cada estágio representa um ponto diferente na evolução do design.
 
-The pattern is not introduced simply because it exists. It is introduced when the problem demonstrates that the additional abstraction is justified.
+O padrão não é introduzido simplesmente porque ele existe. Ele é introduzido quando o problema demonstra que a abstração adicional é justificada.
 
 ---
 
 ## 00-Before
 
-### Context
+### Contexto
 
-The initial version of the notification system supports two notification channels:
+A versão inicial do sistema de notificações oferece suporte a dois canais:
 
 - Email
 - SMS
 
-A `NotificationService` receives the notification type and decides which concrete notification implementation should be created and used.
+O `NotificationService` recebe o tipo de notificação e decide qual implementação concreta de notificação deve ser criada e utilizada.
 
-At this point, the implementation is intentionally straightforward.
+Neste momento, a implementação é intencionalmente direta.
 
-There is no interface, abstract creator, factory hierarchy, or dependency injection.
+Não existe interface, creator abstrato, hierarquia de factories ou injeção de dependência.
 
-### Initial Implementation
+### Implementação Inicial
 
-The application follows this flow:
+A aplicação segue este fluxo:
 
 ```mermaid
 flowchart TD
     A[BeforeExample] --> B[NotificationService]
-    B --> C{Notification Type}
+    B --> C{Tipo de Notificação}
     C -->|Email| D[EmailNotification]
     C -->|SMS| E[SmsNotification]
-    D --> F[Send Email]
-    E --> G[Send SMS]
+    D --> F[Enviar Email]
+    E --> G[Enviar SMS]
 ```
 
-The `NotificationService` contains the decision about which concrete notification class should be instantiated.
+O `NotificationService` contém a decisão sobre qual classe concreta de notificação deve ser instanciada.
 
-Conceptually, the implementation follows this structure:
+Conceitualmente, a implementação segue esta estrutura:
 
 ```text
 BeforeExample
@@ -93,68 +94,68 @@ NotificationService
       +---- SmsNotification
 ```
 
-### Design Decisions
+### Decisões de Design
 
-The initial implementation intentionally keeps the design simple.
+A implementação inicial mantém o design intencionalmente simples.
 
-#### No Interface Yet
+#### Ainda não há Interface
 
-There are only two concrete notification types and no requirement at this stage that different implementations need to be interchangeable through an abstraction.
+Existem apenas dois tipos concretos de notificação e, neste estágio, não há um requisito que determine que diferentes implementações precisem ser intercambiáveis por meio de uma abstração.
 
-Introducing an interface now would add indirection without solving an existing problem.
+Introduzir uma interface neste momento adicionaria uma camada de indireção sem resolver um problema existente.
 
-#### The Service Owns the Creation Decision
+#### O Serviço é Responsável pela Decisão de Criação
 
-`NotificationService` currently knows which concrete class should be created for each notification type.
+Atualmente, o `NotificationService` sabe qual classe concreta deve ser criada para cada tipo de notificação.
 
-For the initial requirements, this is a straightforward and understandable solution.
+Para os requisitos iniciais, essa é uma solução direta e de fácil compreensão.
 
-#### Concrete Implementations
+#### Implementações Concretas
 
-`EmailNotification` and `SmsNotification` are concrete classes responsible for their respective delivery mechanisms.
+`EmailNotification` e `SmsNotification` são classes concretas responsáveis por seus respectivos mecanismos de entrega.
 
-There is no inheritance hierarchy because the current requirements do not demand one.
+Não existe uma hierarquia de herança porque os requisitos atuais não demandam uma.
 
-### Current Limitations
+### Limitações Atuais
 
-Although the implementation is simple, the `NotificationService` is directly coupled to the concrete notification implementations.
+Embora a implementação seja simples, o `NotificationService` está diretamente acoplado às implementações concretas de notificação.
 
-As the number of notification types increases, the service will need to be modified to accommodate each new type.
+À medida que o número de tipos de notificação aumenta, o serviço precisará ser modificado para acomodar cada novo tipo.
 
-For example, introducing additional channels such as:
+Por exemplo, a introdução de canais adicionais, como:
 
 - WhatsApp;
 - Push Notification;
 - Slack;
 - Webhook;
 
-would require changes to the existing decision logic.
+exigiria alterações na lógica de decisão existente.
 
-At this stage, this is not necessarily a problem. The important point is to recognize the direction in which the design is evolving.
+Neste estágio, isso não é necessariamente um problema. O ponto importante é reconhecer a direção na qual o design está evoluindo.
 
-The next stage will introduce new requirements and allow us to evaluate whether the current design continues to be appropriate.
+O próximo estágio introduzirá novos requisitos e permitirá avaliar se o design atual continua sendo adequado.
 
 ---
 
 ## 01-GoF
 
-This stage will introduce the classic **Factory Method** solution described by the Gang of Four.
+Neste estágio será introduzida a solução clássica do **Factory Method**, descrita pela Gang of Four.
 
-The objective is to understand how the pattern separates the creation of objects from the code that uses those objects.
+O objetivo é compreender como o padrão separa a criação dos objetos do código que utiliza esses objetos.
 
-The implementation will be developed from the limitations identified in the previous stage.
+A implementação será desenvolvida a partir das limitações identificadas no estágio anterior.
 
 ---
 
 ## 02-Modern .NET
 
-After understanding the classic GoF implementation, this stage will explore how similar design goals can be achieved using mechanisms commonly found in modern .NET applications.
+Após compreender a implementação clássica do GoF, este estágio explorará como objetivos de design semelhantes podem ser alcançados utilizando mecanismos comuns em aplicações .NET modernas.
 
-The objective is not to replace the original pattern automatically, but to evaluate different approaches and understand their respective trade-offs.
+O objetivo não é substituir automaticamente o padrão original, mas avaliar diferentes abordagens e compreender seus respectivos trade-offs.
 
 ---
 
-## References
+## Referências
 
 - Gamma, Erich; Helm, Richard; Johnson, Ralph; Vlissides, John. *Design Patterns: Elements of Reusable Object-Oriented Software*.
-- Microsoft .NET documentation.
+- Documentação do .NET da Microsoft.
